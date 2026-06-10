@@ -46,6 +46,7 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --animate-shimmer: shimmer 2s infinite;
 }
 
 :root {
@@ -117,14 +118,49 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+  
   html {
     @apply font-sans;
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    /* Prevents the 'pull-to-refresh' bounce on mobile browsers for a native app feel */
+    overscroll-behavior-y: none;
+    /* Forces high-end font rendering */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom highlight color when a user selects text (Warm Amber) */
+  ::selection {
+    background-color: rgba(245, 158, 11, 0.3); 
+    color: oklch(0.985 0 0); 
+  }
+}
+
+@layer utilities {
+  /* Cross-browser utility to hide ugly default scrollbars while keeping functionality */
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .hide-scrollbar {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;     /* Firefox */
+  }
+
+  /* Reusable class for our premium dark mode UI components */
+  .glass-panel {
+    @apply bg-[#1A1D24]/80 backdrop-blur-xl border border-white/5 shadow-2xl;
   }
 }
